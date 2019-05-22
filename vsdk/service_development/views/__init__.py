@@ -6,3 +6,4 @@ from .vse_dtmf_input import *
 from .user import *
 from .voiceservice import *
 from .language import *
+from .offer import *

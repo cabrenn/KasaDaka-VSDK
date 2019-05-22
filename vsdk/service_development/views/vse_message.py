@@ -13,9 +13,14 @@ def message_presentation_get_redirect_url(message_presentation_element,session):
 def message_presentation_generate_context(message_presentation_element,session):
     language = session.language
     message_voice_fragment_url = message_presentation_element.get_voice_fragment_url(language)
-    redirect_url = message_presentation_get_redirect_url(message_presentation_element,session) 
+    redirect_url = message_presentation_get_redirect_url(message_presentation_element,session)
+    execute_script = message_presentation_element.execute_script
+
     context = {'message_voice_fragment_url':message_voice_fragment_url,
-            'redirect_url':redirect_url}
+            'redirect_url':redirect_url,
+            'execute_script': execute_script,
+            'session_id': session.id
+            }
     return context
 
 

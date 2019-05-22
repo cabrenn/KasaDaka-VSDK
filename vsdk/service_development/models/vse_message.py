@@ -19,6 +19,12 @@ class MessagePresentation(VoiceServiceElement):
             verbose_name=_('Redirect element'),
             help_text = _("The element to redirect to after the message has been played."))
 
+    execute_script = models.CharField(
+        max_length = 50,
+        null = True,
+        blank = True,
+    )
+
     class Meta:
         verbose_name = _('Message Presentation Element')
 

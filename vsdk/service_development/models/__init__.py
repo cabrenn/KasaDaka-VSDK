@@ -8,3 +8,4 @@ from .vse_message import *
 from .vse_record import *
 from .vse_dtmf_input import *
 from .user_input import *
+from .offer import *
