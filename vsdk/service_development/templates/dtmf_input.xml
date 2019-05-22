@@ -1,0 +1,15 @@
+{% extends "base.xml" %}
+{% block content%}
+<form  id="dtmf_input_form">
+    <field name="dtmf_input" type="number">
+        <prompt>
+			<audio src="{{ dtmf_input_voice_label }}"/>
+        </prompt>
+        <filled>
+ 	        <assign name="dtmf_input_entered" expr="dtmf_input"/>
+            <assign name="redirect" expr="'{{ redirect_url }}'"/>
+            <submit next="{{ url }}" enctype="multipart/form-data" method="post" namelist="redirect dtmf_input_entered"/>
+        </filled>
+    </field>
+</form>	
+{% endblock %}

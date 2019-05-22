@@ -168,9 +168,22 @@ class CallSessionAdmin(admin.ModelAdmin):
 class MessagePresentationAdmin(VoiceServiceElementAdmin):
     fieldsets = VoiceServiceElementAdmin.fieldsets + [(_('Message Presentation'), {'fields': ['_redirect','final_element']})]
 
+class DtmfInputAdmin(VoiceServiceElementAdmin):
+    fieldsets = VoiceServiceElementAdmin.fieldsets + [(_('DTMF Input'), {'fields': ['_redirect', 'input_category']})]
+
 class KasaDakaUserAdmin(admin.ModelAdmin):
     list_filter = ['service','language','caller_id']
     list_display = ('__str__','caller_id', 'service', 'language')
+
+class DtmfUserInputAdmin(admin.ModelAdmin):
+    list_display = ('__str__','value','category','description')
+    list_filter = ('category',)
+    fieldsets = [(_('General'), {'fields' : ['value', 'session','category','description']})]
+    readonly_fields = ('value','session','category')
+    can_delete = True
+
+    def has_add_permission(self, request):
+        return False
 
 class SpokenUserInputAdmin(admin.ModelAdmin):
     list_display = ('__str__','category','description','audio_file_player')
@@ -189,6 +202,8 @@ class SpokenUserInputAdmin(admin.ModelAdmin):
 admin.site.register(VoiceService, VoiceServiceAdmin)
 admin.site.register(MessagePresentation, MessagePresentationAdmin)
 admin.site.register(Choice, ChoiceAdmin)
+admin.site.register(DtmfUserInput, DtmfUserInputAdmin)
+admin.site.register(DtmfInput, DtmfInputAdmin)
 admin.site.register(CallSession, CallSessionAdmin)
 admin.site.register(KasaDakaUser, KasaDakaUserAdmin)
 admin.site.register(Language)

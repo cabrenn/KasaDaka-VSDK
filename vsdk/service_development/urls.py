@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.urls import path
 
 from . import views
 
@@ -11,6 +12,7 @@ urlpatterns = [
     url(r'^start/(?P<voice_service_id>[0-9]+)/(?P<session_id>[0-9]+)$', views.voice_service_start, name='voice-service'),
     url(r'^user/register/(?P<session_id>[0-9]+)$', views.KasaDakaUserRegistration.as_view(), name = 'user-registration'),
     url(r'^language_select/(?P<session_id>[0-9]+)$', views.LanguageSelection.as_view(), name = 'language-selection'),
-    url(r'^record/(?P<element_id>[0-9]+)/(?P<session_id>[0-9]+)$', views.record, name='record')
+    url(r'^record/(?P<element_id>[0-9]+)/(?P<session_id>[0-9]+)$', views.record, name='record'),
+    path('dtmf_input/<int:element_id>/<int:session_id>', views.dtmf_input_view, name='dtmf_input'),
 ]
 
