@@ -35,7 +35,7 @@ class SeedOffer(models.Model):
             MinValueValidator(1)
         ]
     )
-
+    """
     location = models.ForeignKey(
         SpokenUserInput,
         null=True,
@@ -43,7 +43,7 @@ class SeedOffer(models.Model):
         verbose_name =_('Offer location'),
         help_text = _("Recording of the offer's location")
     )
-
+    """
     telephone_number = models.CharField(max_length=100)
 
     def seed_name(self):

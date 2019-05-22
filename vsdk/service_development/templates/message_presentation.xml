@@ -10,7 +10,7 @@ plays back a message, then sends the user to the redirect
 <audio src="{{ message_voice_fragment_url }}"/>
 </prompt>
 {% if execute_script %}
-<submit next="/{{execute_script}}/{{session_id}}"/>
+<submit next="/vxml/{{execute_script}}/{{session_id}}"/>
 {% endif%}
 {% if redirect_url %}
 <goto next="{{ redirect_url }}"/>
