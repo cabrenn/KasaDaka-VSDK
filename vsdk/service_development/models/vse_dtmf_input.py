@@ -7,7 +7,7 @@ from .vs_element import VoiceServiceElement
 from .user_input import UserInputCategory
 
 class DtmfInput(VoiceServiceElement):
-    _urls_name = 'service-development:dtmf_input'
+    _urls_name = 'service-development:dtmfinput'
     _redirect = models.ForeignKey(
             VoiceServiceElement,
             on_delete = models.SET_NULL,
