@@ -11,4 +11,4 @@ def save_offer(request, session_id):
     o.days_online = 9
     o.telephone_number = "231313"
     o.save()
-    return None
+    return redirect(request.POST['redirect'])
