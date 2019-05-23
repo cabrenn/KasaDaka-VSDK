@@ -45,7 +45,9 @@ class DtmfUserInput(models.Model):
                 label_names.append(second)
             else:
                 label_names.append(str_value)
-
+    
+    def category_name(self):
+        return self.category.name
 
     def __str__(self):
         from django.template import defaultfilters
