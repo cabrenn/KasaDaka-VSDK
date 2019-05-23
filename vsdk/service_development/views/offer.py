@@ -2,10 +2,73 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 
 from ..models import *
 
+# up to 99 (incl.)
+def get_label_names_from_value(value):
+    label_names = []
+    str_value = str(value)
+    if value < 20:
+        label_names.append(str_value)
+    else:
+        list_str_value = list(str_value)
+        if list_str_value[1] != 0:
+            second = list_str_value[1]
+            list_str_value[1] = '0'
+            label_names.append(''.join(list_str_value))
+            label_names.append(second)
+        else:
+            label_names.append(str_value)
+
+def get_voice_url_by_name(name, language):
+    return VoiceLabel.objects.filter(name__iexact=name).first().get_voice_fragment_url(language)
+
+def create_get_offer_context(seed_offers, offer_i, session):
+    seed_offer = seed_offers[offer_i]
+
+    if offer_i + 1 >= len(seed_offers):
+        next_offer_i = 0
+    else:
+        next_offer_i = offer_i + 1
+
+    if offer_i - 1 < 0:
+        prev_offer_i = len(seed_offers) - 1
+    else:
+        prev_offer_i = offer_i - 1
+    
+    caller_id = session.caller_id
+
+    audio = []
+    for label_name in get_label_names_from_value(seed_offer.amount_of_seeds):
+        audio.append(get_voice_url_by_name(label_name, session.language))
+    audio.append(get_voice_url_by_name('bags_of', session.language))
+    audio.append(get_voice_url_by_name(seed_offer.seed_name(), session.language))
+    audio.append(get_voice_url_by_name('for', session.language))
+    for label_name in get_label_names_from_value(seed_offer.seeds_price):
+        audio.append(get_voice_url_by_name(label_name, session.language))
+    audio.append(get_voice_url_by_name('per_bag_in', session.language))
+
+    return {
+        'next_offer_i': next_offer_i,
+        'prev_offer_i': prev_offer_i,
+        'caller_id': caller_id,
+        'offer_audio': audio 
+    }
+
+
 def get_offer(request, offer_i, session_id):
     session = get_object_or_404(CallSession, pk=session_id)
     seed_type = get_seed_type(session)
-    seed_offers = SeedOffer.objects.filter(seed_type=seed_type).filter(days_to_go__lte = 0).order_by('created_at')
+    seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
+    seed_offers.sort(key=lambda x: x.created_at)
+    return render(request, 'offer.xml', create_get_offer_context(seed_offers, offer_i, session), content_type='text/xml')
+
+
+def get_offer(request, session_id):
+    session = get_object_or_404(CallSession, pk=session_id)
+    seed_type = get_seed_type(session)
+    seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
+    seed_offers.sort(key=lambda x: x.created_at)
+    return render(request, 'offer.xml', create_get_offer_context(seed_offers, 0, session), content_type='text/xml')
+
 
 
 def get_seed_type(session):

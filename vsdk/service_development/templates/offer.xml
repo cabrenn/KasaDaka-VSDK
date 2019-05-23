@@ -3,10 +3,12 @@
 <menu>
   <property name="inputmodes" value="dtmf"/>
   <prompt>
-    
+    {% for sound in audio %}
+        <audio src="{{sound}}"></audio>
+    {% endfor %}
   </prompt>
   <choice dtmf="1" next="/vxml/transfer?caller_id={{caller_id}}"/>
-  <choice dtmf="2" next="/vxml/offer/{{previous_i}}"/>
-  <choice dtmf="3" next="/vxml/offer/{{next_i}}"/>
+  <choice dtmf="2" next="/vxml/offer/{{prev_offer_i}}"/>
+  <choice dtmf="3" next="/vxml/offer/{{next_offer_i}}"/>
 </menu>
 {% endblock %}
