@@ -166,7 +166,7 @@ class CallSessionAdmin(admin.ModelAdmin):
     #    return actions
 
 class MessagePresentationAdmin(VoiceServiceElementAdmin):
-    fieldsets = VoiceServiceElementAdmin.fieldsets + [(_('Message Presentation'), {'fields': ['_redirect','final_element', 'execute_script']})]
+    fieldsets = VoiceServiceElementAdmin.fieldsets + [(_('Message Presentation'), {'fields': ['_redirect','final_element', 'execute_script', 'redirect_to_executed_script']})]
 
 class DtmfInputAdmin(VoiceServiceElementAdmin):
     fieldsets = VoiceServiceElementAdmin.fieldsets + [(_('DTMF Input'), {'fields': ['_redirect', 'input_category']})]
