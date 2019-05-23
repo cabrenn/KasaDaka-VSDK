@@ -5,7 +5,7 @@ plays back a message, then sends the user to the redirect
 
 {% block content %}
   <form id="transfer2">
-      <transfer name="mycall" dest="tel:{{telephone_number}}" bridge="true">
+      <transfer name="mycall" dest="tel:{{telephone_number}}" type="consultation">
      <prompt>
         Please wait...
      </prompt>
