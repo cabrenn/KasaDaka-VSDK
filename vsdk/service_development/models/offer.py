@@ -58,7 +58,7 @@ class SeedOffer(models.Model):
     telephone_number = models.CharField(max_length=100)
 
     def days_to_go(self):
-        return (datetime.now() - self.created_at).days - self.days_online
+        return (datetime.now().replace(tzinfo=None) - self.created_at.replace(tzinfo=None)).days - self.days_online
 
     def seed_name(self):
         for seed_choice in self.SEED_TYPES_CHOICES:
