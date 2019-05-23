@@ -101,8 +101,8 @@ def save_offer(request, session_id):
     return redirect(request.POST['redirect'])
 
 def transfer(request, telephone_number):
-    context:{
+    context = {
         'telephone_number': telephone_number
     }
 
-    return render(request, 'transfer.xml',context=context, content_type='text/xml')
+    return render(request, 'transfer.xml',context, content_type='text/xml')
