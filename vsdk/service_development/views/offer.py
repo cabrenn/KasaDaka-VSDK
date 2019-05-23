@@ -2,6 +2,14 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 
 from ..models import *
 
+def get_seed_type(session):
+    steps = session.steps.all()
+    element_ids = steps.values_list('_visited_element', flat=True)
+    elements_names = VoiceServiceElement.objects.filter(id__in=element_ids).values_list('name', flat=True)
+    for seed_type in SeedOffer.SEED_TYPES_CHOICES:
+        if elements_names.filter(name__istartswith=seed_type[1]):
+            return seed_type[0]
+
 # up to 99 (incl.)
 def get_label_names_from_value(value):
     label_names = []
@@ -34,7 +42,7 @@ def create_get_offer_context(seed_offers, offer_i, session, session_id):
     else:
         prev_offer_i = offer_i - 1
     
-    caller_id = session.caller_id
+    caller_id = seed_offer.telephone_number
 
     audio = []
     for label_name in get_label_names_from_value(seed_offer.amount_of_seeds):
@@ -72,13 +80,7 @@ def get_offer(request, session_id):
 
 
 
-def get_seed_type(session):
-    steps = session.steps.all()
-    element_ids = steps.values_list('_visited_element', flat=True)
-    elements_names = VoiceServiceElement.objects.filter(id__in=element_ids).values_list('name', flat=True)
-    for seed_type in SeedOffer.SEED_TYPES_CHOICES:
-        if elements_names.filter(name__istartswith=seed_type[1]):
-            return seed_type[0]
+
 
 
 def save_offer(request, session_id):
