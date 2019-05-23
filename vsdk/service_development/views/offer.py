@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
+from django.conf import settings
 
 from ..models import *
 
@@ -54,6 +55,7 @@ def create_get_offer_context(seed_offers, offer_i, session, session_id):
     for label_name in get_label_names_from_value(seed_offer.seeds_price):
         audio.append(get_voice_url_by_name(label_name, session.language))
     audio.append(get_voice_url_by_name('per_bag_in', session.language))
+    audio.append(settings.MEDIA_URL + str(seed_offer.location.audio))
 
     return {
         'next_offer_i': next_offer_i,

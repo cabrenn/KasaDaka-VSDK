@@ -24,6 +24,7 @@ class MessagePresentation(VoiceServiceElement):
         null = True,
         blank = True,
     )
+    redirect_to_executed_script = models.BooleanField(_('If true this element will redirect to the exec. script will post otherwise.'), default = False)
 
     class Meta:
         verbose_name = _('Message Presentation Element')

@@ -19,7 +19,8 @@ def message_presentation_generate_context(message_presentation_element,session):
     context = {'message_voice_fragment_url':message_voice_fragment_url,
             'redirect_url':redirect_url,
             'execute_script': execute_script,
-            'session_id': session.id
+            'session_id': session.id,
+            'redirect_to_executed_script': message_presentation_element.redirect_to_executed_script
             }
     return context
 
