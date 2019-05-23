@@ -2,6 +2,12 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 
 from ..models import *
 
+def get_offer(request, offer_i, session_id):
+    session = get_object_or_404(CallSession, pk=session_id)
+    seed_type = get_seed_type(session)
+    seed_offers = SeedOffer.objects.filter(seed_type=seed_type).filter(days_to_go__lte = 0).order_by('created_at')
+
+
 def get_seed_type(session):
     steps = session.steps.all()
     element_ids = steps.values_list('_visited_element', flat=True)

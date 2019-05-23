@@ -1,0 +1,12 @@
+{% extends "base.xml" %}
+{% block content%}
+<menu>
+  <property name="inputmodes" value="dtmf"/>
+  <prompt>
+    
+  </prompt>
+  <choice dtmf="1" next="/vxml/transfer?caller_id={{caller_id}}"/>
+  <choice dtmf="2" next="/vxml/offer/{{previous_i}}"/>
+  <choice dtmf="3" next="/vxml/offer/{{next_i}}"/>
+</menu>
+{% endblock %}

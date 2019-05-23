@@ -1,5 +1,7 @@
 from django.db import models
 
+from datetime import datetime
+
 from .user_input import SpokenUserInput, DtmfUserInput
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
@@ -51,7 +53,12 @@ class SeedOffer(models.Model):
         help_text = _("Recording of the offer's location")
     )
     
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+
     telephone_number = models.CharField(max_length=100)
+
+    def days_to_go(self):
+        return (datetime.now() - self.created_at).days - self.days_online
 
     def seed_name(self):
         for seed_choice in self.SEED_TYPES_CHOICES:
