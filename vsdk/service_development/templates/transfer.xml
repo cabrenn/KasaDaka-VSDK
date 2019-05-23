@@ -1,0 +1,30 @@
+{% extends "base.xml" %}
+{#
+plays back a message, then sends the user to the redirect
+#}
+
+{% block content %}
+  <form id="transfer2">
+      <transfer name="mycall" dest="tel:{{telephone_number}}" type="consultation">
+     <prompt>
+        Please wait...
+     </prompt>
+
+     <filled>
+        <log> Transfer filled. mycall (form variable) = <value expr="mycall"/> </log>
+        <if cond="mycall == 'busy'">
+           <prompt>
+             Line is busy. Please call again later.
+           </prompt>
+         <elseif cond="mycall == 'noanswer'"/>
+           <prompt>
+            Can't answer the phone now. Please call
+             again later.
+           </prompt>
+         </if>
+      </filled>
+
+
+   </transfer>
+  </form>
+{% endblock %}

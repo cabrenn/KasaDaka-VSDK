@@ -7,7 +7,7 @@
         <audio src="{{sound}}"></audio>
     {% endfor %}
   </prompt>
-  <choice dtmf="1" next="/vxml/transfer?caller_id={{caller_id}}"/>
+  <choice dtmf="1" next="/vxml/transfer/{{caller_id}}"/>
   <choice dtmf="2" next="/vxml/getoffer/{{prev_offer_i}}/{{session_id}}"/>
   <choice dtmf="3" next="/vxml/getoffer/{{next_offer_i}}/{{session_id}}"/>
 </menu>

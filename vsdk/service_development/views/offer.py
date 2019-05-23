@@ -15,7 +15,7 @@ def get_seed_type(session):
 def get_label_names_from_value(value):
     label_names = []
     str_value = str(value)
-    if value < 20:
+    if value < 20 or value % 10 == 0:
         label_names.append(str_value)
     else:
         list_str_value = list(str_value)
@@ -69,7 +69,7 @@ def create_get_offer_context(seed_offers, offer_i, session, session_id):
 def get_offer(request, offer_i, session_id):
     session = get_object_or_404(CallSession, pk=session_id)
     seed_type = get_seed_type(session)
-    seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
+    seed_offers = [obj for obj in SeedOffer.objects.filter(seed_type=seed_type) if obj.days_to_go() < 0]
     seed_offers.sort(key=lambda x: x.created_at)
     return render(request, 'offer.xml', create_get_offer_context(seed_offers, offer_i, session, session_id), content_type='text/xml')
 
@@ -77,7 +77,7 @@ def get_offer(request, offer_i, session_id):
 def get_offer_no_offer(request, session_id):
     session = get_object_or_404(CallSession, pk=session_id)
     seed_type = get_seed_type(session)
-    seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
+    seed_offers = [obj for obj in SeedOffer.objects.filter(seed_type=seed_type) if obj.days_to_go() < 0]
     seed_offers.sort(key=lambda x: x.created_at)
     return render(request, 'offer.xml', create_get_offer_context(seed_offers, 0, session, session_id), content_type='text/xml')
 
@@ -99,3 +99,10 @@ def save_offer(request, session_id):
     o.location = session.session.filter(category__name = 'seed_location').first() 
     o.save()
     return redirect(request.POST['redirect'])
+
+def transfer(request, telephone_number):
+    context:{
+        'telephone_number': telephone_number
+    }
+
+    return render(request, 'transfer.xml',context=context, content_type='text/xml')
