@@ -21,7 +21,7 @@ def get_label_names_from_value(value):
 def get_voice_url_by_name(name, language):
     return VoiceLabel.objects.filter(name__iexact=name).first().get_voice_fragment_url(language)
 
-def create_get_offer_context(seed_offers, offer_i, session):
+def create_get_offer_context(seed_offers, offer_i, session, session_id):
     seed_offer = seed_offers[offer_i]
 
     if offer_i + 1 >= len(seed_offers):
@@ -50,7 +50,8 @@ def create_get_offer_context(seed_offers, offer_i, session):
         'next_offer_i': next_offer_i,
         'prev_offer_i': prev_offer_i,
         'caller_id': caller_id,
-        'offer_audio': audio 
+        'offer_audio': audio,
+        'session_id': session_id
     }
 
 
@@ -59,7 +60,7 @@ def get_offer(request, offer_i, session_id):
     seed_type = get_seed_type(session)
     seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
     seed_offers.sort(key=lambda x: x.created_at)
-    return render(request, 'offer.xml', create_get_offer_context(seed_offers, offer_i, session), content_type='text/xml')
+    return render(request, 'offer.xml', create_get_offer_context(seed_offers, offer_i, session, session_id), content_type='text/xml')
 
 
 def get_offer(request, session_id):
@@ -67,7 +68,7 @@ def get_offer(request, session_id):
     seed_type = get_seed_type(session)
     seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
     seed_offers.sort(key=lambda x: x.created_at)
-    return render(request, 'offer.xml', create_get_offer_context(seed_offers, 0, session), content_type='text/xml')
+    return render(request, 'offer.xml', create_get_offer_context(seed_offers, 0, session, session_id), content_type='text/xml')
 
 
 
