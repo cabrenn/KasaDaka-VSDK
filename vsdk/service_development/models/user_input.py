@@ -30,6 +30,23 @@ class DtmfUserInput(models.Model):
     class Meta:
         verbose_name = _('DTMF User Input')
 
+    # up to 99 (incl.)
+    def get_label_names_from_value(self):
+        label_names = []
+        str_value = str(self.value)
+        if self.value < 20:
+            label_names.append(str_value)
+        else:
+            list_str_value = list(str_value)
+            if list_str_value[1] != 0:
+                second = list_str_value[1]
+                list_str_value[1] = '0'
+                label_names.append(''.join(list_str_value))
+                label_names.append(second)
+            else:
+                label_names.append(str_value)
+
+
     def __str__(self):
         from django.template import defaultfilters
         date = defaultfilters.date(self.time, "SHORT_DATE_FORMAT")
