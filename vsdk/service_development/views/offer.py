@@ -25,6 +25,7 @@ def get_label_names_from_value(value):
             label_names.append(second)
         else:
             label_names.append(str_value)
+    return label_names
 
 def get_voice_url_by_name(name, language):
     return VoiceLabel.objects.filter(name__iexact=name).first().get_voice_fragment_url(language)
@@ -71,7 +72,7 @@ def get_offer(request, offer_i, session_id):
     return render(request, 'offer.xml', create_get_offer_context(seed_offers, offer_i, session, session_id), content_type='text/xml')
 
 
-def get_offer(request, session_id):
+def get_offer_no_offer(request, session_id):
     session = get_object_or_404(CallSession, pk=session_id)
     seed_type = get_seed_type(session)
     seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]

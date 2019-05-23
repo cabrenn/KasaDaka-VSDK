@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^record/(?P<element_id>[0-9]+)/(?P<session_id>[0-9]+)$', views.record, name='record'),
     path('dtmfinput/<int:element_id>/<int:session_id>', views.dtmf_input_view, name='dtmfinput'),
     path('saveoffer/<int:session_id>', views.save_offer, name='saveoffer'),
-    path('getoffer/<int:session_id>', views.get_offer, name='getoffer'),
+    path('getoffer/<int:session_id>', views.get_offer_no_offer, name='getoffer'),
     path('getoffer/<int:offer_i>/<int:session_id>', views.get_offer, name='getoffer')
 ]
 
