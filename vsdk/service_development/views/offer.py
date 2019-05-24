@@ -131,7 +131,7 @@ def save_offer(request, session_id):
     o.save()
 
     locations = get_audio_locations_of_seed_offer(o, session)
-    o.audio = SimpleUploadedFile("offer_{}.wav".format(o.id), get_file_from_urls(locations[:-1]).read())
+    o.audio = SimpleUploadedFile("offer_{}.wav".format(o.id), get_file_from_urls(locations).read())
     o.save()
     return redirect(request.POST['redirect'])
 

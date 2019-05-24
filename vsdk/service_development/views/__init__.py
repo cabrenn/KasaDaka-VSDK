@@ -7,3 +7,4 @@ from .user import *
 from .voiceservice import *
 from .language import *
 from .offer import *
+from .show_offers import *
