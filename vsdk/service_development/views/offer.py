@@ -45,7 +45,7 @@ def create_get_offer_context(seed_offers, offer_i, session, session_id):
         prev_offer_i = offer_i - 1
     
     caller_id = seed_offer.telephone_number
-
+    offer_information = get_voice_url_by_name('offer_contact', session.language)
     audio = []
     for label_name in get_label_names_from_value(seed_offer.amount_of_seeds):
         audio.append(get_voice_url_by_name(label_name, session.language))
@@ -62,7 +62,8 @@ def create_get_offer_context(seed_offers, offer_i, session, session_id):
         'prev_offer_i': prev_offer_i,
         'caller_id': caller_id,
         'offer_audio': audio,
-        'session_id': session_id
+        'session_id': session_id,
+        'offer_information': offer_information
     }
 
 

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext
 
 from .vs_element import VoiceServiceElement
 from .user_input import UserInputCategory
+from vsdk.service_development.models import VoiceLabel
 
 class DtmfInput(VoiceServiceElement):
     _urls_name = 'service-development:dtmfinput'
@@ -17,6 +18,37 @@ class DtmfInput(VoiceServiceElement):
             verbose_name=_('Redirect element'),
             help_text = _("The element to redirect to after the DTMF has been validated"))
     
+    repeat_recording_to_caller = models.BooleanField(_('Repeat the input to the caller before asking for confirmation'), default=True)
+    repeat_voice_label = models.ForeignKey(
+        VoiceLabel,
+        verbose_name = _('Repeat input voice label'),
+        help_text = _('The voice label that is played after the system repeats the user input. Example: "...dollars per bag of seeds."'),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='dtfm_repeat_voice_label'
+    )
+    ask_confirmation = models.BooleanField(
+        _('Ask the caller to confirm their input'), default=True)
+    ask_confirmation_voice_label = models.ForeignKey(
+        VoiceLabel,
+        verbose_name = _('Ask for confirmation voice label'),
+        help_text = _('The voice label that asks the user to confirm their input. Example: "Are you satisfied with your input? Press 1 to confirm, or press 2 to retry."'),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='dtfm_confirmation_voice_label',
+    )
+    final_voice_label = models.ForeignKey(
+        VoiceLabel,
+        verbose_name = _('Final voice label'),
+        help_text = _('The voice label that is played when the user has completed the input process. Example: "Thank you for your message! The input has been stored successfully."'),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='dtfm_final_voice_label',
+    )
+
     input_category = models.ForeignKey(
         UserInputCategory,
         verbose_name = _('Input category'),

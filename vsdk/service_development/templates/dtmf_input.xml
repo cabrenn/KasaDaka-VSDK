@@ -7,9 +7,47 @@
         </prompt>
         <filled>
  	        <assign name="dtmf_input_entered" expr="dtmf_input"/>
-            <assign name="redirect" expr="'{{ redirect_url }}'"/>
-            <submit next="{{ url }}" enctype="multipart/form-data" method="post" namelist="redirect dtmf_input_entered"/>
         </filled>
     </field>
+
+    {% if record.repeat_recording_to_caller %}
+        <block>
+            <prompt>
+
+            <audio>
+                <value expr="dtmf_input_entered"/>
+            </audio>
+            <audio src="{{ repeat_voice_label }}"/>
+            </prompt>
+        </block>
+    {% endif %}
+
+    {%  if record.ask_confirmation %}
+        <field name="confirm">
+            <prompt>
+                <audio src="{{ask_confirmation_voice_label}}"/>
+            </prompt>
+            <grammar xml:lang="en-US" root = "MYRULE" mode="dtmf">
+                <rule id="MYRULE" scope = "public">
+                    <one-of>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <if cond="confirm == '1'">
+                    <prompt>
+                        <audio src="{{final_voice_label}}"/>
+                    </prompt>
+                    <assign name="redirect" expr="'{{ redirect_url }}'"/>
+                    <submit next="{{ url }}" enctype="multipart/form-data" method="post" namelist="redirect dtmf_input_entered"/>
+                </if>
+                <if cond="confirm == '2'">
+                    <goto next="{{ url }}"/>
+                </if>
+            </filled>
+        </field>
+    {% endif %}
 </form>	
 {% endblock %}

@@ -1,11 +1,11 @@
 {% extends "base.xml" %}
 {% block content%}
 <menu>
-  <property name="inputmodes" value="dtmf"/>
   <prompt>
     {% for sound in offer_audio %}
         <audio src="{{sound}}"></audio>
     {% endfor %}
+    <audio src="{{offer_information}}"></audio>
   </prompt>
   <choice dtmf="1" next="/vxml/transfer/{{caller_id}}"/>
   <choice dtmf="2" next="/vxml/getoffer/{{prev_offer_i}}/{{session_id}}"/>

@@ -5,29 +5,28 @@ plays back a message, then sends the user to the redirect
 
 {% block content %}
 <form>
-<block>
-<prompt>
-<audio src="{{ message_voice_fragment_url }}"/>
-</prompt>
-{% if redirect_to_executed_script %}
-<goto next="/vxml/{{execute_script}}/{{session_id}}"/>
-{% endif %}
+    <block>
+        <prompt>
+        <audio src="{{ message_voice_fragment_url }}"/>
+        </prompt>
+        {% if redirect_to_executed_script %}
+        <goto next="/vxml/{{execute_script}}/{{session_id}}"/>
+        {% endif %}
 
-{% if execute_script %}
+        {% if execute_script %}
+            {% if redirect_url %}
+            <assign name="redirect" expr="'{{ redirect_url }}'"/>
+            <submit next="/vxml/{{execute_script}}/{{session_id}}" enctype="multipart/form-data" method="post" namelist="redirect"/>
+            {% else %}
+            <submit next="/vxml/{{execute_script}}/{{session_id}}" method="post"/>
+            {% endif%}
+        {% else %}
+            {% if redirect_url %}
+            <goto next="{{ redirect_url }}"/>
+            {% endif %}
+        {% endif%}
 
-    {% if redirect_url %}
-    <assign name="redirect" expr="'{{ redirect_url }}'"/>
-    <submit next="/vxml/{{execute_script}}/{{session_id}}" enctype="multipart/form-data" method="post" namelist="redirect"/>
-    {% else %}
-    <submit next="/vxml/{{execute_script}}/{{session_id}}" method="post"/>
-    {% endif%}
-{% else %}
-    {% if redirect_url %}
-    <goto next="{{ redirect_url }}"/>
-    {% endif %}
-{% endif%}
-
-</block>
+    </block>
 </form>
 
 {% endblock %}
