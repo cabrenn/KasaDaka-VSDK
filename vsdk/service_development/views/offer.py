@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from ..models import *
 
@@ -31,6 +32,19 @@ def get_label_names_from_value(value):
 def get_voice_url_by_name(name, language):
     return VoiceLabel.objects.filter(name__iexact=name).first().get_voice_fragment_url(language)
 
+def get_audio_locations_of_seed_offer(seed_offer, session):
+    audio = []
+    for label_name in get_label_names_from_value(seed_offer.amount_of_seeds):
+        audio.append(get_voice_url_by_name(label_name, session.language))
+    audio.append(get_voice_url_by_name('bags_of', session.language))
+    audio.append(get_voice_url_by_name(seed_offer.seed_name(), session.language))
+    audio.append(get_voice_url_by_name('for', session.language))
+    for label_name in get_label_names_from_value(seed_offer.seeds_price):
+        audio.append(get_voice_url_by_name(label_name, session.language))
+    audio.append(get_voice_url_by_name('per_bag_in', session.language))
+    audio.append(settings.MEDIA_URL + str(seed_offer.location.audio))
+    return audio
+
 def create_get_offer_context(seed_offers, offer_i, session, session_id):
     seed_offer = seed_offers[offer_i]
 
@@ -46,16 +60,8 @@ def create_get_offer_context(seed_offers, offer_i, session, session_id):
     
     caller_id = seed_offer.telephone_number
     offer_information = get_voice_url_by_name('offer_contact', session.language)
-    audio = []
-    for label_name in get_label_names_from_value(seed_offer.amount_of_seeds):
-        audio.append(get_voice_url_by_name(label_name, session.language))
-    audio.append(get_voice_url_by_name('bags_of', session.language))
-    audio.append(get_voice_url_by_name(seed_offer.seed_name(), session.language))
-    audio.append(get_voice_url_by_name('for', session.language))
-    for label_name in get_label_names_from_value(seed_offer.seeds_price):
-        audio.append(get_voice_url_by_name(label_name, session.language))
-    audio.append(get_voice_url_by_name('per_bag_in', session.language))
-    audio.append(settings.MEDIA_URL + str(seed_offer.location.audio))
+    audio = get_audio_locations_of_seed_offer(seed_offer, session)
+    
 
     return {
         'next_offer_i': next_offer_i,
@@ -83,7 +89,31 @@ def get_offer_no_offer(request, session_id):
     return render(request, 'offer.xml', create_get_offer_context(seed_offers, 0, session, session_id), content_type='text/xml')
 
 
+def get_file_from_urls(urls):
+    import wave
+    import io
+    import requests
 
+    data = []
+
+    for url in urls:
+        r = requests.get(url)
+        w = wave.open(io.BytesIO(r.content), 'rb')
+        data.append( [w.getparams(), w.readframes(w.getnframes())] )
+        w.close()
+
+    a = io.BytesIO()
+    output = wave.open(a, 'wb')
+    #output = wave.open(outfile, 'wb')
+    output.setparams(data[0][0])
+
+    for sound in data:
+        output.writeframes(sound[1])
+    output.close()
+    
+    a.seek(0)
+
+    return a
 
 
 
@@ -98,6 +128,10 @@ def save_offer(request, session_id):
     o.days_online = session.session_dtmf.filter(category__name = 'seed_available').first().value
     o.telephone_number = session.caller_id
     o.location = session.session.filter(category__name = 'seed_location').first() 
+    o.save()
+
+    locations = get_audio_locations_of_seed_offer(o, session)
+    o.audio = SimpleUploadedFile("offer_{}.wav".format(o.id), get_file_from_urls(locations[:-1]).read())
     o.save()
     return redirect(request.POST['redirect'])
 
