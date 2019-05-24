@@ -13,5 +13,5 @@ class OffersView(generic.ListView):
 
     def get_queryset(self):
         seed_offers = [obj for obj in SeedOffer.objects.all() if obj.days_to_go() < 0]
-        seed_offers.sort(key=lambda x: x.days_to_go())
+        seed_offers.sort(key=lambda x: x.days_to_go(), reverse = True)
         return seed_offers
