@@ -14,7 +14,7 @@
         <block>
             <prompt>
 
-            <audio>
+            <audio src="">
                 <value expr="dtmf_input_entered"/>
             </audio>
             <audio src="{{ repeat_voice_label }}"/>
