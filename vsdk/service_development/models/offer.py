@@ -77,3 +77,6 @@ class SeedOffer(models.Model):
             file_url = settings.MEDIA_URL + str(self.audio)
             player_string = str('<audio src="%s" controls>'  % (file_url) + ugettext('Your browser does not support the audio element.') + '</audio>')
             return mark_safe(player_string)
+
+    def __str__(self):
+        return "Offer: {} bags of {} for {}$/bag - {} days to go".format(self.amount_of_seeds, self.seed_name(), self.seeds_price, abs(self.days_to_go()))
